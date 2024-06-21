@@ -3,9 +3,11 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-top: 10rem;
   justify-content: space-evenly;
   align-items: center;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../../images/home_background.jpg');
+  background-size: cover;
+  position: absolute;
 }
 
 .auth-form-container{

@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import jakarta.validation.Valid;
@@ -22,125 +23,187 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.samples.petclinic.exceptions.AccessDeniedException;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
-import org.springframework.samples.petclinic.owner.Owner;
-import org.springframework.samples.petclinic.vet.Vet;
-import org.springframework.samples.petclinic.vet.VetService;
+import org.springframework.samples.petclinic.game.Game;
+import org.springframework.samples.petclinic.game.GameRepository;
+import org.springframework.samples.petclinic.player.Player;
+import org.springframework.samples.petclinic.player.PlayerRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
 
-	private UserRepository userRepository;
+	private final PasswordEncoder encoder;
+    private UserRepository userRepository;
+    private GameRepository gameRepository;
+    private PlayerRepository playerRepository;
 
-//	private OwnerService ownerService;
-//
-	private VetService vetService;
+    @Autowired
+    public UserService(UserRepository userRepository, PlayerRepository playerRepository, GameRepository gameRepository,
+                       PasswordEncoder encoder) {
+        this.gameRepository = gameRepository;
+        this.userRepository = userRepository;
+        this.playerRepository = playerRepository;
+        this.encoder = encoder;
+    }
 
-	@Autowired
-	public UserService(UserRepository userRepository, VetService vetService) {
-		this.userRepository = userRepository;
-//		this.ownerService = ownerService;
-		this.vetService = vetService;
-	}
 
-	@Transactional
-	public User saveUser(User user) throws DataAccessException {
-		userRepository.save(user);
-		return user;
-	}
+    @Transactional
+    public User saveUser(User user) throws DataAccessException {
+        userRepository.save(user);
+        return user;
+    }
 
-	@Transactional(readOnly = true)
-	public User findUser(String username) {
-		return userRepository.findByUsername(username)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-	}
+    @Transactional(readOnly = true)
+    public Optional<User> findUserByUsername(String username) throws ResourceNotFoundException {
+        if (userRepository.findUserByUsername(username).isPresent()) {
+            return userRepository.findUserByUsername(username);
+        } else {
+            throw new ResourceNotFoundException("User", "username", username);
+        }
+    }
 
-	@Transactional(readOnly = true)
-	public User findUser(Integer id) {
-		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-	}
+    @Transactional(readOnly = true)
+    public User findUserById(Integer id) {
+        return userRepository.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+    }
 
-	@Transactional(readOnly = true)
-	public Owner findOwnerByUser(String username) {
-		return userRepository.findOwnerByUser(username)
-				.orElseThrow(() -> new ResourceNotFoundException("Owner", "username", username));
-	}
+    @Transactional(readOnly = true)
+    public Player findPlayerByUsername(String username) {
+        return userRepository.findPlayerByUsername(username)
+            .orElseThrow(() -> new ResourceNotFoundException("Player", "username", username));
+    }
 
-	@Transactional(readOnly = true)
-	public Vet findVetByUser(int userId) {
-		return userRepository.findVetByUser(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("Vet", "id", userId));
-	}
+    @Transactional(readOnly = true)
+    public Player findPlayerByUserId(int id) {
+        return userRepository.findPlayerByUserId(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Player", "ID", id));
+    }
 
-	@Transactional(readOnly = true)
-	public Owner findOwnerByUser(int id) {
-		return userRepository.findOwnerByUser(id).orElseThrow(() -> new ResourceNotFoundException("Owner", "ID", id));
-	}
+    @Transactional(readOnly = true)
+    public User findCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            throw new ResourceNotFoundException("Nobody authenticated!");
+        } else {
+            return userRepository.findUserByUsername(auth.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
+        }
+    }
 
-	@Transactional(readOnly = true)
-	public User findCurrentUser() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null)
-			throw new ResourceNotFoundException("Nobody authenticated!");
-		else
-			return userRepository.findByUsername(auth.getName())
-					.orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
-	}
+    public Boolean existsUserByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
 
-	public Boolean existsUser(String username) {
-		return userRepository.existsByUsername(username);
-	}
+    @Transactional(readOnly = true)
+    public Page<User> findAllPagination(Pageable pageable) {
+        return userRepository.findAllPagination(pageable);
+    }
 
-	@Transactional(readOnly = true)
-	public Iterable<User> findAll() {
-		return userRepository.findAll();
-	}
+    public Page<User> findAllUserByAuthorityPagination(String auth, Pageable pageable) {
+        return userRepository.findAllUserByAuthorityPagination(auth, pageable);
+    }
 
-	public Iterable<User> findAllByAuthority(String auth) {
-		return userRepository.findAllByAuthority(auth);
-	}
+    @Transactional(readOnly = true)
+    public Iterable<User> findAll() {
+        return userRepository.findAll();
+    }
 
-	@Transactional
-	public User updateUser(@Valid User user, Integer idToUpdate) {
-		User toUpdate = findUser(idToUpdate);
-		BeanUtils.copyProperties(user, toUpdate, "id");
-		userRepository.save(toUpdate);
+    public Iterable<User> findAllUserByAuthority(String auth) {
+        return userRepository.findAllUserByAuthority(auth);
+    }
 
-		return toUpdate;
-	}
+    @Transactional
+    public User updateUser(@Valid User user, Integer idToUpdate) {
+        User toUpdate = findUserById(idToUpdate);
+        User Updater = findCurrentUser();
+        if (Updater.getAuthority().getId() == 2) {
+            if (idToUpdate == Updater.getId()) {
+                if (!user.getPassword().equals(toUpdate.getPassword())) { // si password ha cambiado, la codificamos
+                    user.setPassword(encoder.encode(user.getPassword()));
+                    BeanUtils.copyProperties(user, toUpdate, "id");
+                } else { // si password no ha cambiado, no la codificamos otra vez
+                    BeanUtils.copyProperties(user, toUpdate, "id", "password");
+                }
+                userRepository.save(toUpdate);
+            } else {
+                throw new AccessDeniedException("You cannot update another player");
+            }
+        } else {
+            if (idToUpdate == Updater.getId()) {
+                if (!user.getPassword().equals(toUpdate.getPassword())) { // si password ha cambiado, la codificamos
+                    user.setPassword(encoder.encode(user.getPassword()));
+                    BeanUtils.copyProperties(user, toUpdate, "id");
+                } else { // si password no ha cambiado, no la codificamos otra vez
+                    BeanUtils.copyProperties(user, toUpdate, "id", "password");
+                }
+                userRepository.save(toUpdate);
+            } else if (toUpdate.getAuthority().getId() != 1) {
+                if (!user.getPassword().equals(toUpdate.getPassword())) { // si password ha cambiado, la codificamos
+                    user.setPassword(encoder.encode(user.getPassword()));
+                    BeanUtils.copyProperties(user, toUpdate, "id");
+                } else { // si password no ha cambiado, no la codificamos otra vez
+                    BeanUtils.copyProperties(user, toUpdate, "id", "password");
+                }
+                userRepository.save(toUpdate);
+            } else {
+                throw new AccessDeniedException("You cannot udpate another admin");
+            }
+        }
+        return toUpdate;
+    }
 
-	@Transactional
-	public void deleteUser(Integer id) {
-		User toDelete = findUser(id);
-		deleteRelations(id, toDelete.getAuthority().getAuthority());
-//		this.userRepository.deleteOwnerRelation(id);
-//		this.userRepository.deleteVetRelation(id);
-		this.userRepository.delete(toDelete);
-	}
+    @Transactional
+    public void deleteUser(Integer id) {
+        User toDelete = findUserById(id);
+        User deleter = findCurrentUser();
+        if (deleter.getAuthority().getId() == 2) {
+            if (id == deleter.getId()) {
+                deleteRelations(id, toDelete.getAuthority().getAuthority());
+                this.userRepository.delete(toDelete);
+            } else {
+                throw new AccessDeniedException("You cannot delete another player");
+            }
+        } else {
+            if (id == deleter.getId()) {
+                deleteRelations(id, toDelete.getAuthority().getAuthority());
+                this.userRepository.delete(toDelete);
+            } else if (toDelete.getAuthority().getId() != 1) {
+                deleteRelations(id, toDelete.getAuthority().getAuthority());
+                this.userRepository.delete(toDelete);
+            } else {
+                throw new AccessDeniedException("You cannot delete another admin");
+            }
+        }
+    }
 
-	private void deleteRelations(Integer id, String auth) {
-		switch (auth) {
-		case "OWNER":
-//			Optional<Owner> owner = ownerService.optFindOwnerByUser(id);
-//			if (owner.isPresent())
-//				ownerService.deleteOwner(owner.get().getId());
-			this.userRepository.deleteOwnerRelation(id);
-			break;
-		case "VET":
-			Optional<Vet> vet = vetService.optFindVetByUser(id);
-			if (vet.isPresent()) {
-				vetService.deleteVet(vet.get().getId());
-			}
-			break;
-		default:
-			// The only relations that have user are Owner and Vet
-			break;
-		}
+    private void deleteRelations(Integer id, String auth) {
+        Player player = userRepository.findPlayerByUserId(id).get();
+        // ponemos a null el jugador de la lista de jugadores de las partidas que haya jugado
+        List<Game> games = gameRepository.findGamesByPlayerId(player.getId());
+        if (!games.isEmpty()) {
+            for (Game game : games) {
+                game.removePlayer(player.getId());
+                gameRepository.save(game);
+            }
+        }
+        playerRepository.delete(player);
+    }
 
-	}
+    @Transactional(readOnly = true)
+    public void verifyPassword(Integer userId, String password) {
+        User user = findUserById(userId);
+        if (!encoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect password");
+        }
+    }
+
 
 }

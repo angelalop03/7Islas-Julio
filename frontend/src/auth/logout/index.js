@@ -16,6 +16,7 @@ const Logout = () => {
   }
 
   return (
+    <div className="page-container">
     <div className="auth-page-container">
       <div className="auth-form-container">
         <h2 className="text-center text-md">
@@ -30,6 +31,7 @@ const Logout = () => {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

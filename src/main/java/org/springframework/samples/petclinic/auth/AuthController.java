@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.auth.payload.request.LoginRequest;
 import org.springframework.samples.petclinic.auth.payload.request.SignupRequest;
+import org.springframework.samples.petclinic.auth.payload.request.SignupRequestAdmin;
 import org.springframework.samples.petclinic.auth.payload.response.JwtResponse;
 import org.springframework.samples.petclinic.auth.payload.response.MessageResponse;
 import org.springframework.samples.petclinic.configuration.jwt.JwtUtils;
@@ -77,11 +78,19 @@ public class AuthController {
 	
 	@PostMapping("/signup")	
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userService.existsUser(signUpRequest.getUsername()).equals(true)) {
+		if (userService.existsUserByUsername(signUpRequest.getUsername()).equals(true)) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
 		}
 		authService.createUser(signUpRequest);
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 
+	@PostMapping("/signupAdmin")	
+	public ResponseEntity<MessageResponse> registerAdmin(@Valid @RequestBody SignupRequestAdmin signUpRequest) {
+		if (userService.existsUserByUsername(signUpRequest.getUsername()).equals(true)) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+		}
+		authService.createAdmin(signUpRequest);
+		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
 }
