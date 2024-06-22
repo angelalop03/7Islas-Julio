@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.card.Card;
 import org.springframework.samples.petclinic.game.Game;
@@ -135,6 +134,10 @@ public class PlayerService {
         Map<String , Object> numbers= new HashMap<>();
         numbers.put("total", playerRepository.countAll());
         return numbers;
+    }
+
+    public User findUserById(int i) {
+        return userRepository.findById(i).get();
     }
 
     

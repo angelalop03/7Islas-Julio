@@ -23,6 +23,9 @@ public class PlayerEdit {
     @NotBlank
     String password;
 
+    @NotBlank
+    String image;
+
     @NotEmpty
     @Column(name = "first_name")
     protected String firstName;
