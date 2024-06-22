@@ -40,7 +40,7 @@ public class GameController {
     }
 
     @GetMapping(value = "/state/{state}")
-    public ResponseEntity<List<Game>> findAllGamesByStatus(@PathVariable("status") GameState state) {
+    public ResponseEntity<List<Game>> findAllGamesByStatus(@PathVariable("state") GameState state) {
         List<Game> res= gameService.findByState(state);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
