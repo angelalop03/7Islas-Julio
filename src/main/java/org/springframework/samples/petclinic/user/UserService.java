@@ -126,10 +126,10 @@ public class UserService {
         User Updater = findCurrentUser();
         if (Updater.getAuthority().getId() == 2) {
             if (idToUpdate == Updater.getId()) {
-                if (!user.getPassword().equals(toUpdate.getPassword())) { // si password ha cambiado, la codificamos
+                if (!user.getPassword().equals(toUpdate.getPassword())) { 
                     user.setPassword(encoder.encode(user.getPassword()));
                     BeanUtils.copyProperties(user, toUpdate, "id");
-                } else { // si password no ha cambiado, no la codificamos otra vez
+                } else { 
                     BeanUtils.copyProperties(user, toUpdate, "id", "password");
                 }
                 userRepository.save(toUpdate);
@@ -138,18 +138,18 @@ public class UserService {
             }
         } else {
             if (idToUpdate == Updater.getId()) {
-                if (!user.getPassword().equals(toUpdate.getPassword())) { // si password ha cambiado, la codificamos
+                if (!user.getPassword().equals(toUpdate.getPassword())) { 
                     user.setPassword(encoder.encode(user.getPassword()));
                     BeanUtils.copyProperties(user, toUpdate, "id");
-                } else { // si password no ha cambiado, no la codificamos otra vez
+                } else { 
                     BeanUtils.copyProperties(user, toUpdate, "id", "password");
                 }
                 userRepository.save(toUpdate);
             } else if (toUpdate.getAuthority().getId() != 1) {
-                if (!user.getPassword().equals(toUpdate.getPassword())) { // si password ha cambiado, la codificamos
+                if (!user.getPassword().equals(toUpdate.getPassword())) { 
                     user.setPassword(encoder.encode(user.getPassword()));
                     BeanUtils.copyProperties(user, toUpdate, "id");
-                } else { // si password no ha cambiado, no la codificamos otra vez
+                } else { 
                     BeanUtils.copyProperties(user, toUpdate, "id", "password");
                 }
                 userRepository.save(toUpdate);
@@ -186,7 +186,6 @@ public class UserService {
 
     private void deleteRelations(Integer id, String auth) {
         Player player = userRepository.findPlayerByUserId(id).get();
-        // ponemos a null el jugador de la lista de jugadores de las partidas que haya jugado
         List<Game> games = gameRepository.findGamesByPlayerId(player.getId());
         if (!games.isEmpty()) {
             for (Game game : games) {

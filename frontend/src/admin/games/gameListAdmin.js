@@ -11,19 +11,19 @@ export default function GameListAdmin() {
     const [visible, setVisible] = useState(false);
     const modal = getErrorModal(setVisible, visible, message);
 
-    const jwt = tokenService.getLocalAccessToken(); // Asegúrate de obtener el token de manera adecuada
+    const jwt = tokenService.getLocalAccessToken(); 
 
     const [games, setGames] = useFetchState(
-        [], // Valor inicial vacío para los juegos
-        `/api/v1/games`, // Ruta de la API para obtener los juegos
-        jwt, // Token JWT
+        [], 
+        `/api/v1/games`, 
+        jwt, 
         setMessage,
         setVisible
     );
 
     const getGameState = (game) => {
-        let state = "Finished"; // Estado por defecto
-        let color = "Black"; // Color por defecto
+        let state = "Finished"; 
+        let color = "Black";
 
         if (game.createDate && !game.startDate) {
             state = "Waiting for start";

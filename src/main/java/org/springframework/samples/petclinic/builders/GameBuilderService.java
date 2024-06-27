@@ -37,15 +37,11 @@ public class GameBuilderService {
 
 
     public void startGame(Game game) {
-        // Crea un mazo nuevo de cartas
         cardBuilderService.createCards(game);
-        // Crea las islas de la partida
         islandBuilderService.createIslands(game);
-        // Reparte las cartas del mazo creado anteriormente
         List<Card> deck = cardService.findCardsByGameId(game.getId());
         List<Island> islas = islandService.findIslandsByGameId(game.getId());
         distributionBuilderService.distributeCards(game, deck, islas);
-        // Establece el sistema de turnos de la partida
         turnBuilderService.distributionTurns(game);
     }
 
