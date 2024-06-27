@@ -2,30 +2,16 @@ package org.springframework.samples.petclinic.user;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.samples.petclinic.owner.Owner;
-import org.springframework.samples.petclinic.vet.Vet;
+import org.springframework.data.repository.query.Param;
+import org.springframework.samples.petclinic.player.Player;
 
 public interface UserRepository extends  CrudRepository<User, String>{
 	
-//	@Modifying
-//	@Query("DELETE FROM Owner o WHERE o.user.username = :username")
-//	void deleteOwnerOfUser(String username);
-//	
-//	@Modifying
-//	@Query("DELETE FROM Pet p WHERE p.owner.id = :id")
-//	public void deletePetsOfOwner(@Param("id") int id);
-	
-	@Query("SELECT o FROM Owner o WHERE o.user.username = :username")
-	Optional<Owner> findOwnerByUser(String username);
-	
-	@Query("SELECT o FROM Owner o WHERE o.user.id = :id")
-	Optional<Owner> findOwnerByUser(int id);
-
-	@Query("SELECT v FROM Vet v WHERE v.user.id = :userId")
-	Optional<Vet> findVetByUser(int userId);
 
 	Optional<User> findByUsername(String username);
 
@@ -35,13 +21,32 @@ public interface UserRepository extends  CrudRepository<User, String>{
 	
 	@Query("SELECT u FROM User u WHERE u.authority.authority = :auth")
 	Iterable<User> findAllByAuthority(String auth);
-	
-	@Query("DELETE FROM Owner o WHERE o.user.id = :userId")
+
+	@Query("SELECT p FROM Player p WHERE p.user.username = :username")
+	Optional<Player> findPlayerByUsername(String username);
+
+	@Query("SELECT p FROM Player p WHERE p.user.id = :id")
+	Optional<Player> findPlayerByUserId(int id);
+
+	Optional<User> findUserByUsername(String username);
+
+
+	Optional<User> findUserById(Integer id);
+
+	@Query("SELECT u FROM User u WHERE u.authority.authority = :auth")
+	Page<User> findAllUserByAuthorityPagination(@Param("auth") String authority, Pageable pageable);
+
+	@Query("SELECT u FROM User u WHERE u.authority.authority = :auth")
+	Iterable<User> findAllUserByAuthority(String auth);
+
+	@Query("SELECT u FROM User u")
+    Page<User> findAllPagination(Pageable pageable);
+
+	@Query("DELETE FROM Player p WHERE p.user.id = :userId")
 	@Modifying
-	void deleteOwnerRelation(int userId);
-	
-	@Query("DELETE FROM Vet v WHERE v.user.id = :userId")
-	@Modifying
-	void deleteVetRelation(int userId);
+	void deletePlayerRelation(int userId);
+
+	@Query("DELETE FROM User u WHERE u.id = :userId")
+	void deleteUserById(Integer userId);
 	
 }

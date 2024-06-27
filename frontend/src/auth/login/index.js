@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Alert } from "reactstrap";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
-import "../../static/css/auth/authButton.css";
+import "../../static/css/login/login.css";
 import { loginFormInputs } from "./form/loginFormInputs";
 
 export default function Login() {
@@ -26,15 +26,30 @@ export default function Login() {
       .then(function (data) {
         tokenService.setUser(data);
         tokenService.updateLocalAccessToken(data.token);
-        window.location.href = "/dashboard";
+        const user = tokenService.getUser();
+        fetch(`/api/v1/players/${user.id}/connection`, {
+          method: "PUT",
+          headers: {
+              Authorization: `Bearer ${tokenService.getLocalAccessToken()}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+          }
       })
-      .catch((error) => {         
+        const userAuthority = user.roles[0];
+        if (userAuthority === "ADMIN") {
+          window.location.href = "/";
+        } else if (userAuthority === "PLAYER") {
+          window.location.href = "/";
+        }
+      })
+      .catch((error) => {
         setMessage(error);
-      });            
+      });           
   }
 
   
     return (
+      <div className="page-container">
       <div className="auth-page-container">
         {message ? (
           <Alert color="primary">{message}</Alert>
@@ -55,6 +70,7 @@ export default function Login() {
             buttonClassName="auth-button"
           />
         </div>
+      </div>
       </div>
     );  
 }
