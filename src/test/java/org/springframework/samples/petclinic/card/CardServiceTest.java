@@ -155,8 +155,8 @@ class CardServiceTest {
         cardService.saveCard(card);
 
         List<Card> cards = cardService.findCardsByGameId(2);
-        CardSelected selectedCardsDTO = new CardSelected(cards);
-        cardService.updateSelectedCards(selectedCardsDTO, card.getId(), 2);
+        CardSelected selectedCardS = new CardSelected(cards);
+        cardService.updateSelectedCards(selectedCardS, card.getId(), 2);
 
         List<Card> updatedCards = cardService.findCardsByGameId(2);
         for (Card updatedCard : updatedCards) {

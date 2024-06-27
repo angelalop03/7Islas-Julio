@@ -53,8 +53,7 @@ public class CardService {
     }
 
     @Transactional
-    public Card updateSelectedCards(CardSelected cardSelected, Integer cardId,
-                                    Integer playerId) {
+    public Card updateSelectedCards(CardSelected cardSelected, Integer cardId, Integer playerId) {
         Card cardToUpdate = updateCard(cardId, playerId);
         for (Card card : cardSelected.getCardsSelected()) {
             card.setPlayer(null);

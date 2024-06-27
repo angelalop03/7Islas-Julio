@@ -1,17 +1,21 @@
 import changeTurn from "./changeTurn";
 
 
-class selectedCardsDTO {
-    constructor(selectedCards) {
-        this.selectedCards = selectedCards;
+class cardSelected {
+    constructor(cardsSelected) {
+        this.cardsSelected = cardsSelected;
     }
 }
 
 export default function move(game, card, resultadoTirada, mano, player, jwt, setMessage, setVisible, setDiceIsThrown, diceIsThrown) {
-    let cartasSeleccionadas = mano.filter(carta => carta.selected === true)
+    let cartasSeleccionadas = mano.filter(carta => carta.isSelected === true);
+    if (cartasSeleccionadas.length === 0) {
+        alert("Debes seleccionar al menos una carta para mover.");
+        return;
+    }
     if (!diceIsThrown || resultadoTirada === 0) {
         window.alert("Para jugar, tira el dado.");
-    } else if (resultadoTirada === card.island.number && cartasSeleccionadas.length === 0) {
+    } else if (resultadoTirada === card.island.num && cartasSeleccionadas.length === 0) {
         fetch(`/api/v1/cards/${card.id}/player/${player.id}`, {
             method: "PUT",
             headers: {
@@ -29,8 +33,8 @@ export default function move(game, card, resultadoTirada, mano, player, jwt, set
                 }
             })
             .catch((message) => alert(message));
-    } else if (Math.abs(card.island.number - resultadoTirada) === cartasSeleccionadas.length) {
-        let cartasManoSeleccionadas = new selectedCardsDTO(cartasSeleccionadas);
+    } else if (Math.abs(card.island.num - resultadoTirada) === cartasSeleccionadas.length) {
+        let cartasManoSeleccionadas = new cardSelected(cartasSeleccionadas);
         fetch(`/api/v1/cards/${card.id}/player/${player.id}/selectedCards`, {
             method: "PUT",
             headers: {
@@ -51,8 +55,12 @@ export default function move(game, card, resultadoTirada, mano, player, jwt, set
                 }
             })
             .catch((message) => alert(message));
+        console.log('cartasManoSeleccionadas:', cartasManoSeleccionadas);  // Agregado para verificar los datos
+
     } else {
         window.alert("Cartas seleccionadas: " + cartasSeleccionadas.length + ". Tirada: " + resultadoTirada + 
             ". No puedes viajar a esta isla.");
     }
 }
+
+

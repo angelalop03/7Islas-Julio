@@ -13,13 +13,14 @@ public class CardSelected {
 
     @NotNull
     @NotEmpty
-    List<Card> cardsSelected;
+    private List<Card> cardsSelected;
 
-    public CardSelected(List<Card> cards){
-        this.cardsSelected= cards;
+    public CardSelected() {
     }
-    public CardSelected(){
-        
+
+    public CardSelected(List<Card> cards) {
+        this.cardsSelected = cards;
     }
+    
 
 }

@@ -23,7 +23,7 @@ public interface PlayerRepository extends CrudRepository<Player, Integer>{
     @Query("SELECT COUNT(p) FROM Player p")
 	public Integer countAll();
 
-    @Query("SELECT c FROM Card c WHERE c.player.id = :playerId")
+    @Query("SELECT c FROM Card c WHERE c.player.id =:playerId")
     public List<Card> findCardsByPlayerId(int playerId);
 
     @Query("SELECT u FROM User u WHERE u.id = :id")

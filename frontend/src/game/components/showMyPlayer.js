@@ -10,7 +10,12 @@ export default function ShowMyPlayer(props) {
                 <div className="game-cartas">
 
                     {props.isPlayerTurn &&
-                        <h6>Te toca jugar!!!</h6>
+                        <h6>It's your Turn!!!</h6>
+                    }
+                     {
+                        <div className="game-cartas-scroll">
+                            {props.visualHand}
+                        </div>
                     }
 
                     <div className="game-boton-abandonar">

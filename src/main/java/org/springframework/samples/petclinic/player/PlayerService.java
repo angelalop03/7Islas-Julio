@@ -61,9 +61,9 @@ public class PlayerService {
     }
 
     @Transactional(readOnly = true)
-    public List<Card> findCardsByPlayerId(int playerId) throws DataAccessException{
-        return playerRepository.findCardsByPlayerId(playerId);
-    }
+	public List<Card> findCardsByPlayerId(int playerID) {
+		return this.playerRepository.findCardsByPlayerId(playerID);
+	}
 
     @Transactional
 	public Player savePlayer(Player player, Boolean update) throws DataAccessException {

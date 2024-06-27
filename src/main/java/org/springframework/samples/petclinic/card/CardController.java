@@ -85,19 +85,29 @@ public class CardController {
     }
 
     @PutMapping(value = "/{cardId}/player/{playerId}/selectedCards")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Card> updateSelectedCards(@RequestBody @Valid CardSelected cardSelected,
-    @PathVariable("cardId") int cardId, @PathVariable("playerId") int playerId) {
-        RestPreconditions.checkNotNull(cardService.findCardById(cardId),
-            "Card", "ID", findById(cardId));
-        RestPreconditions.checkNotNull(playerService.findPlayerById(playerId),
-            "Player", "ID", playerService.findPlayerById(playerId));
-        for(Card card : cardSelected.getCardsSelected()) {
-            RestPreconditions.checkNotNull(cardService.findCardById(card.getId()),
-            "Card", "ID", findById(card.getId()));
-        }
-        return new ResponseEntity<>(cardService.updateSelectedCards(cardSelected, cardId, playerId), HttpStatus.OK);
+@ResponseStatus(HttpStatus.OK)
+public ResponseEntity<Card> updateSelectedCards(@RequestBody @Valid CardSelected selectedCard,
+                                                @PathVariable("cardId") int cardId,
+                                                @PathVariable("playerId") int playerId) {
+    // Verificar que la carta y el jugador existen
+    RestPreconditions.checkNotNull(cardService.findCardById(cardId), "Card", "ID", findById(cardId));
+    RestPreconditions.checkNotNull(playerService.findPlayerById(playerId), "Player", "ID", playerService.findPlayerById(playerId));
+
+    // Validar que las cartas seleccionadas no son nulas
+    if (selectedCard.getCardsSelected() == null || selectedCard.getCardsSelected().isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    // Verificar que todas las cartas seleccionadas existen
+    for (Card card : selectedCard.getCardsSelected()) {
+        RestPreconditions.checkNotNull(cardService.findCardById(card.getId()), "Card", "ID", findById(card.getId()));
+    }
+
+    // Agregado para verificar los datos recibidos
+    System.out.println("Datos recibidos en el backend: " + selectedCard);
+
+    return new ResponseEntity<>(cardService.updateSelectedCards(selectedCard, cardId, playerId), HttpStatus.OK);
+}
 
     
 

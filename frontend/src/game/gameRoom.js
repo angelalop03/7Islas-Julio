@@ -3,7 +3,6 @@ import useFetchState from "../util/useFetchState";
 import tokenService from "../services/token.service";
 import { useEffect, useState } from "react";
 import getIdFromUrl from "../util/getIdFromUrl";
-import Barco from '../static/images/Barco.png';
 import { Button } from "reactstrap";
 import useIntervalFetchState from "../util/useIntervalFetchState";
 import getErrorModal from "../util/getErrorModal";
@@ -16,6 +15,8 @@ import throwDice from './util/throwDice';
 import getDiceNumber from './util/getImageForResultDice';
 import finishGame from './util/finishGame';
 import Countdown from "./components/countdown";
+import getProfileImage from "../util/getProfileImage";
+
 
 // Obtenemos el token y el usuario actual
 const jwt = tokenService.getLocalAccessToken();
@@ -196,8 +197,8 @@ export default function GameRoom() {
                             <div>
                                 <div className='game-cartas'>
                                     <img
-                                        src={Barco}
-                                        alt={Barco}
+                                        src={getProfileImage(jugador.image)}
+                                        alt={getProfileImage(jugador.image)}
                                         style={{ width: '80px', height: '80px' }}
                                     />
                                 </div>
@@ -268,7 +269,7 @@ export default function GameRoom() {
                             onClick={() => {
                                 selectCard(card, jwt, setMessage, setVisible);
                             }}>
-                            {card.selected ? "Deseleccionar" : "Seleccionar"}
+                            {card.isSelected ? "DeSelect" : "Select"}
                         </Button>
                     }
                 </div>
@@ -325,10 +326,6 @@ export default function GameRoom() {
                     <ShowIsland number={3} cardsIsland={cardsIsland3} player={player} game={game} resultadoTirada={resultadoTirada}
                         mano={mano} jwt={jwt} setMessage={setMessage} setVisible={setVisible} isPlayerTurn={isPlayerTurn}
                         setDiceIsThrown={setDiceIsThrown} diceIsThrown={diceIsThrown} />
-                    {isPlayerTurn &&
-                        <Countdown startingSeconds={60} isPlayerTurn={isPlayerTurn} game={game} user={user} jwt={jwt}
-                            setMessage={setMessage} setVisible={setVisible} />
-                    }
                     <ShowIsland number={4} cardsIsland={cardsIsland4} player={player} game={game} resultadoTirada={resultadoTirada}
                         mano={mano} jwt={jwt} setMessage={setMessage} setVisible={setVisible} isPlayerTurn={isPlayerTurn}
                         setDiceIsThrown={setDiceIsThrown} diceIsThrown={diceIsThrown} />
@@ -341,6 +338,10 @@ export default function GameRoom() {
                     <ShowIsland number={7} cardsIsland={cardsIsland7} player={player} game={game} resultadoTirada={resultadoTirada}
                         mano={mano} jwt={jwt} setMessage={setMessage} setVisible={setVisible} isPlayerTurn={isPlayerTurn}
                         setDiceIsThrown={setDiceIsThrown} diceIsThrown={diceIsThrown} />
+                    {isPlayerTurn &&
+                        <Countdown startingSeconds={60} isPlayerTurn={isPlayerTurn} game={game} user={user} jwt={jwt}
+                            setMessage={setMessage} setVisible={setVisible} />
+                    }
                 </div>
             </div>
             <div className='game-down'>

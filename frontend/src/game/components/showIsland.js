@@ -14,7 +14,11 @@ export default function ShowIsland(props) {
 
     return (
         <div className={rutacss}>
-            <h3>ISLA {props.number}</h3>
+            {props.number !== 7 &&
+            <h3>ISLA {props.number}</h3>}
+            {props.number === 7 &&
+            <h3>MAZO</h3>}
+
             {props.number !== 7 &&
                 <div className="game-cartas">
                     <img src={props.cardsIsland === null ? '' : getImageForCardType(props.cardsIsland.type)}

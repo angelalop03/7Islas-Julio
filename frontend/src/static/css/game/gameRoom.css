@@ -78,28 +78,22 @@
 .game-tablero {
     display: grid;
     margin-right: 10%;
-    height: 100%;
+    height: 150%;
     width: 100%;
 }
 
 .game-contador {
-    background-color: rgb(214, 42, 183);
+    background-color: rgb(225, 154, 212);
     padding: 1rem;
     border-radius: 25px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-self: center;
-    justify-self: center;
-    grid-column-start: 4;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    position: absolute;
+    bottom: 10px; 
+    left: 10px; 
 }
 
 .game-isla-1 {
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/ISLA.png');
-    background-size: 200px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/Isla_1.png');
+    background-size: 130px;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
@@ -114,8 +108,8 @@
 
 
 .game-isla-2 {
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/ISLA.png');
-    background-size: 200px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/Isla_2.png');
+    background-size: 145px;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
@@ -129,8 +123,8 @@
 }
 
 .game-isla-3 {
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/ISLA.png');
-    background-size: 200px;
+    background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0)), url('../../images/Isla_3.png');
+    background-size: 145px;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
@@ -144,8 +138,8 @@
 }
 
 .game-isla-4 {
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/ISLA.png');
-    background-size: 200px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/Isla_4.png');
+    background-size: 145px;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
@@ -159,8 +153,8 @@
 }
 
 .game-isla-5 {
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/ISLA.png');
-    background-size: 200px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/Isla_5.png');
+    background-size: 145px;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
@@ -174,8 +168,8 @@
 }
 
 .game-isla-6 {
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/ISLA.png');
-    background-size: 200px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/Isla_6.png');
+    background-size: 145px;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
@@ -189,8 +183,8 @@
 }
 
 .game-mazo {
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/ISLA.png');
-    background-size: 200px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../../images/mazo.png');
+    background-size: 145px;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
@@ -205,7 +199,9 @@
 
 
 .game-boton-abandonar {
-    margin-top: 2%;
+    position: absolute;
+    top: 10px; 
+    right: 10px; 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -216,9 +212,16 @@
 .game-cartas-scroll {
     width: 750px;
     display: flex;
+    flex-wrap: wrap; 
     flex-direction: row;
     justify-content: center;
     align-self: center;
-    overflow: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
+    -ms-overflow-style: none; 
+    scrollbar-width: none;  
+}
+
+.game-cartas-scroll::-webkit-scrollbar {
+    display: none;  
 }

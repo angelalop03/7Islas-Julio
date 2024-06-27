@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.builders;
 
-
 import org.springframework.samples.petclinic.card.Card;
 import org.springframework.samples.petclinic.card.Type;
 import org.springframework.samples.petclinic.game.Game;
@@ -12,13 +11,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 @Service
 public class DistributionBuilderService {
 
     public void distributeCards(Game game, List<Card> deck, List<Island> islas) {
-        // Reparte 3 doblones a cada jugador
-        List<Card> doblones= new ArrayList<>(deck.stream().filter(c -> c.getType() == Type.Doblon).toList());
+        resetGame(deck);  
+
+        List<Card> doblones = new ArrayList<>(deck.stream().filter(c -> c.getType() == Type.Doblon).toList());
         List<Player> players = game.getPlayers();
         List<Card> cartasEnUso = new ArrayList<>();
 
@@ -29,7 +28,6 @@ public class DistributionBuilderService {
             doblones.removeAll(cartasAsignadas);
         }
 
-        // Reparte una carta boca arriba en cada isla (1-6) y el resto de cartas boca abajo en la isla 7
         deck.removeAll(cartasEnUso);
         Collections.shuffle(deck);
 
@@ -43,4 +41,11 @@ public class DistributionBuilderService {
         deck.forEach(c -> c.setIsland(islas.get(6)));
     }
 
+    private void resetGame(List<Card> deck) {
+        for (Card card : deck) {
+            card.setPlayer(null);
+            card.setIsland(null);
+            card.setReversed(false);
+        }
+    }
 }
