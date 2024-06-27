@@ -9,10 +9,7 @@ class cardSelected {
 
 export default function move(game, card, resultadoTirada, mano, player, jwt, setMessage, setVisible, setDiceIsThrown, diceIsThrown) {
     let cartasSeleccionadas = mano.filter(carta => carta.isSelected === true);
-    if (cartasSeleccionadas.length === 0) {
-        alert("Debes seleccionar al menos una carta para mover.");
-        return;
-    }
+    
     if (!diceIsThrown || resultadoTirada === 0) {
         window.alert("Para jugar, tira el dado.");
     } else if (resultadoTirada === card.island.num && cartasSeleccionadas.length === 0) {
