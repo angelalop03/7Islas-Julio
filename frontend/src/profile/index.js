@@ -27,9 +27,11 @@ return (
                 <button onClick={handleEditProfile} className="button">
                     Edit profile
                 </button>
-                <button onClick={handleDeleteAccount} className="buttonDelete">
-                    Delete Account
-                </button>
+                {tokenService.getUser().roles[0] === 'PLAYER' && (
+            <button onClick={handleDeleteAccount} className="buttonDelete">
+              Delete Account
+            </button>
+          )}
             </div>
 
         </div>
