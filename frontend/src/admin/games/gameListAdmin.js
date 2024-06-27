@@ -67,9 +67,9 @@ export default function GameListAdmin() {
                             <th style={{ fontSize: 25, width: "5%", padding: "10px" }}>Code</th>
                             <th style={{ fontSize: 25, width: "15%", padding: "10px" }}>Creator</th>
                             <th style={{ fontSize: 25, width: "25%", padding: "10px" }}>Players</th>
-                            <th style={{ fontSize: 25, width: "10%", padding: "10px" }}>Created At</th>
-                            <th style={{ fontSize: 25, width: "10%", padding: "10px" }}>Start</th>
-                            <th style={{ fontSize: 25, width: "10%", padding: "10px" }}>Finish</th>
+                            <th style={{ fontSize: 25, width: "10%", padding: "10px" }}>Create </th>
+                            <th style={{ fontSize: 25, width: "10%", padding: "10px" }}>Start </th>
+                            <th style={{ fontSize: 25, width: "10%", padding: "10px" }}>End </th>
                             <th style={{ fontSize: 25, width: "15%", padding: "10px" }}>State</th>
                         </tr>
                     </thead>
