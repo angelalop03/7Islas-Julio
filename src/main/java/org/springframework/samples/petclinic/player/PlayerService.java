@@ -72,10 +72,7 @@ public class PlayerService {
 		}
 		playerRepository.save(player);
 		return player;
-	}
-    //CREATE STAT
-    //ASIGANR LOGROS  
-    //updatePlayerForAchievements  
+	} 
 
     @Transactional
     public Player updatePlayer(PlayerEdit player, int id) throws DataAccessException{
